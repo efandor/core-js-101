@@ -477,6 +477,8 @@ function getIntervalArray(start, end) {
  *   [ 1, 2, 3, 3, 2, 1 ] => [ 1, 2, 3 ]
  *   [ 'a', 'a', 'a', 'a' ]  => [ 'a' ]
  *   [ 1, 1, 2, 2, 3, 3, 4, 4] => [ 1, 2, 3, 4]
+ *    let arr_2 = arr.filter((item, index) => {
+ *        return arr.indexOf(item) === index})
  */
 function distinct(arr) {
   return Array.from(new Set(arr));
@@ -512,8 +514,14 @@ function distinct(arr) {
  *    "Poland" => ["Lodz"]
  *   }
  */
-function group(/* array, keySelector, valueSelector */) {
-  throw new Error('Not implemented');
+function group(array, keySelector, valueSelector) {
+  const outMap = new Map();
+  const arr = [];
+  array.map((item) => {
+    const key = keySelector(item);
+    return outMap.set(key, (outMap.get(key) || arr).concat(valueSelector(item)));
+  });
+  return outMap;
 }
 
 
@@ -530,8 +538,8 @@ function group(/* array, keySelector, valueSelector */) {
  *   [[1, 2], [3, 4], [5, 6]], (x) => x     =>   [ 1, 2, 3, 4, 5, 6 ]
  *   ['one','two','three'], x=>x.split('')  =>   ['o','n','e','t','w','o','t','h','r','e','e']
  */
-function selectMany(/* arr, childrenSelector */) {
-  throw new Error('Not implemented');
+function selectMany(arr, childrenSelector) {
+  return arr.flatMap(childrenSelector);
 }
 
 
@@ -547,8 +555,8 @@ function selectMany(/* arr, childrenSelector */) {
  *   ['one','two','three'], [2]       => 'three'  (arr[2])
  *   [[[ 1, 2, 3]]], [ 0, 0, 1 ]      => 2        (arr[0][0][1])
  */
-function getElementByIndexes(/* arr, indexes */) {
-  throw new Error('Not implemented');
+function getElementByIndexes(arr, indexes) {
+  return indexes.reduce((acc, index) => acc[index], arr);
 }
 
 
@@ -570,8 +578,11 @@ function getElementByIndexes(/* arr, indexes */) {
  *   [ 1, 2, 3, 4, 5, 6, 7, 8 ]   =>  [ 5, 6, 7, 8, 1, 2, 3, 4 ]
  *
  */
-function swapHeadAndTail(/* arr */) {
-  throw new Error('Not implemented');
+function swapHeadAndTail(arr) {
+  const index = Math.floor(arr.length / 2);
+  return arr.slice(-index)
+    .concat(arr.slice(index, -index))
+    .concat(arr.slice(0, index));
 }
 
 
